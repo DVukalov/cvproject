@@ -67,6 +67,23 @@ class corner_detector_fast : public cv::Feature2D
         return "FAST_Binary";
     }
 };
+
+/// \brief Moving objects counter class
+class object_counter
+{
+public:
+    /// \brief ctor
+    object_counter();
+	
+	void setCountingArea(const cv::Rect& area);
+	
+	void apply(const cv::Mat& image, cv::Mat& result);
+
+private:
+	cv::Rect mCountingArea; // Near this area we will count objects
+	cv::Ptr<cv::BackgroundSubtractor> pSubstractor;
+};
+
 } // namespace cvlib
 
 #endif // __CVLIB_HPP__

@@ -1,7 +1,9 @@
 # cvproject
 
 ## TODO:
-* Motion segmentation
-* Morphological closing
+* Motion segmentation (+)
+* Morphological processing (~+)
 * Compute gradient
 * Count automobiles
+* Add time counter
+* Add exit by spacebar

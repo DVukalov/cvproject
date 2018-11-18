@@ -52,7 +52,9 @@ struct fps_counter
 /// \param image, in/out - image where FPS will be printed
 /// \param fps, in/out - fps_counter which is used for tracking processed frames
 /// \param color, in - the color of text
-void put_fps_text(cv::Mat& image, fps_counter& fps, cv::Scalar color = {255, 0, 0});
+void put_fps_text(cv::Mat& image, fps_counter& fps, cv::Scalar color = {0, 255, 0});
+
+void put_car_count_text(cv::Mat& image, size_t car_count, cv::Scalar color = {0, 0, 255});
 } // namespace utils
 
 #endif // __UTILS_HPP__
