@@ -2,5 +2,6 @@
 
 ## TODO:
 * Motion segmentation
-* Clusterization
+* Morphological closing
+* Compute gradient
 * Count automobiles
