@@ -2,8 +2,9 @@
 
 ## TODO:
 * Motion segmentation (+)
-* Morphological processing (~+)
-* Compute gradient
+* Finding objects (strobing) (+)
 * Count automobiles
 * Add time counter
-* Add exit by spacebar
+* Add pause by spacebar
+* Refactoring
+* Shitting
