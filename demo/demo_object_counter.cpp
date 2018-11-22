@@ -24,6 +24,8 @@ int demo_object_counter(int argc, char* argv[])
     cv::Mat frame;
     cv::Mat frame_amcn;
     utils::fps_counter fps;
+	
+	const int area_width = 100; // width of inspecting area (pix)
 
     while (cv::waitKey(30) != 27) // ESC
     {
@@ -32,15 +34,29 @@ int demo_object_counter(int argc, char* argv[])
         cv::imshow(main_wnd, frame);
 
 		// Область подсчета
-		amcn->setCountingArea(cv::Rect(frame.cols / 2 - 30, frame.rows/3, 60, frame.rows/3));
-        amcn->apply(frame, frame_amcn);
+        std::vector<cv::Rect> movedAreas;
+		amcn->setCountingArea(cv::Rect(frame.cols / 2 - area_width, frame.rows/3, 2*area_width, frame.rows/3));
+        amcn->apply(frame, frame_amcn, movedAreas);
         if (!frame_amcn.empty())
 		{
+			
 			cv::line(frame_amcn, cv::Point(frame_amcn.cols / 2, frame.rows/3),
 					 cv::Point(frame_amcn.cols / 2, 2*frame_amcn.rows/3),
 					 cv::Scalar(0, 0, 255), 2, 8);
 			utils::put_fps_text(frame_amcn, fps);
 			utils::put_car_count_text(frame_amcn, 0);
+			
+			if (!movedAreas.empty())
+			{
+				for (auto &it : movedAreas)
+				{
+					const cv::Point point0 = {it.x + frame.cols / 2 - area_width, it.y + frame.rows/3};
+					const cv::Point point1 = {point0.x + it.width, point0.y + it.height};
+					cv::Rect roiIt = cv::Rect(point0, point1);
+					cv::rectangle(frame_amcn, roiIt, cv::Scalar(0, 255, 0) , 2);
+				}
+			}
+			
 			cv::imshow(demo_wnd, frame_amcn);
 		}
     }

@@ -77,11 +77,24 @@ public:
 	
 	void setCountingArea(const cv::Rect& area);
 	
-	void apply(const cv::Mat& image, cv::Mat& result);
+	void apply(const cv::Mat& image, cv::Mat& result, std::vector<cv::Rect> &movedAreas);
+
+	void thresholdImage(cv::Mat &src);
+	std::vector<int> regionQuery(std::vector<cv::Point> *points, cv::Point *point, float eps);
+	std::vector<std::vector<cv::Point>> dbScan_points(std::vector<cv::Point> *points, float eps, int minPts);
+	
+	bool isRectsOverlap(const cv::Rect &rect1, const cv::Rect &rect2);
+	void compareArrays(std::vector<cv::Rect> &firstArray, std::vector<cv::Rect> &secondArray, std::vector<cv::Rect> &resultArray);
+	cv::Rect merge(const cv::Rect &rect1, const cv::Rect &rect2);
+	void mergeIntersectingRectangles(std::vector<cv::Rect> &sourceArray, std::vector<cv::Rect> &resultArray);
 
 private:
 	cv::Rect mCountingArea; // Near this area we will count objects
 	cv::Ptr<cv::BackgroundSubtractor> pSubstractor;
+
+    std::vector<cv::Rect> mBoundRect;
+    std::vector<cv::Rect> mRectFirstArray;
+    std::vector<cv::Rect> mRectSecondArray;
 };
 
 } // namespace cvlib
