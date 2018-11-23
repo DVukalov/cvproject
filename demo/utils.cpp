@@ -101,4 +101,22 @@ void put_car_count_text(cv::Mat& image, size_t car_count, cv::Scalar color /*= (
     cv::putText(image, ss.str(), textOrgPoint, txtFont, fontScale, color, thickness, 8, false);
 }
 
+
+void put_time_text(cv::Mat& image, double time_now, cv::Scalar color /*= (255, 255, 255)*/)
+{
+    static const cv::Point textOrgPoint = { 0, maxTextSize.height*4 - 2 };
+    static const cv::Point rectPoint1 = { 0, maxTextSize.height * 2 + 4 };
+    static const cv::Point rectPoint2 = { maxTextSize.width + 2 , maxTextSize.height*4 + 1};
+
+    std::stringstream ss;
+    ss.precision(5);
+    ss << "TIME: " << time_now;
+
+    cv::Rect fpsRect = cv::Rect(rectPoint1, rectPoint2);
+    cv::rectangle(image, fpsRect, cv::Scalar(0, 0, 0), -1);
+
+    cv::putText(image, ss.str(), textOrgPoint, txtFont, fontScale, color, thickness, 8, false);
+}
+
+
 } // namespace utils
