@@ -41,27 +41,4 @@ TEST_CASE("simple regions", "[split_and_merge]")
         res = split_and_merge(image, 1);
         REQUIRE(0 == cv::countNonZero(image - res));
     }
-
-    SECTION("3x3")
-    {
-        // \todo
-    }
-}
-
-TEST_CASE("compex regions", "[split_and_merge]")
-{
-    SECTION("2x2")
-    {
-        // \todo
-    }
-
-    SECTION("3x3")
-    {
-        // \todo
-    }
-
-    SECTION("4x4")
-    {
-        // \todo
-    }
 }

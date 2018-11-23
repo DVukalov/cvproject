@@ -4,12 +4,11 @@
  * @author Anonymous
  */
 
+#include <chrono>
 #include <cvlib.hpp>
 #include <opencv2/opencv.hpp>
-#include <chrono>
 
 #include "utils.hpp"
-
 
 int demo_object_counter(int argc, char* argv[])
 {
@@ -56,7 +55,7 @@ int demo_object_counter(int argc, char* argv[])
             }
 
             cv::line(frame_amcn, cv::Point(frame_amcn.cols / 2, frame.rows / 3), cv::Point(frame_amcn.cols / 2, 2 * frame_amcn.rows / 3),
-                cv::Scalar(0, 0, 255), 2, 8);
+                     cv::Scalar(0, 0, 255), 2, 8);
             utils::put_fps_text(frame_amcn, fps);
             utils::put_car_count_text(frame_amcn, 0);
 

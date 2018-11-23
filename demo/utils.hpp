@@ -56,7 +56,7 @@ void put_fps_text(cv::Mat& image, fps_counter& fps, cv::Scalar color = {0, 255, 
 
 void put_car_count_text(cv::Mat& image, size_t car_count, cv::Scalar color = {0, 0, 255});
 
-void put_time_text(cv::Mat& image, double time_now, cv::Scalar color = { 0, 255, 255 });
+void put_time_text(cv::Mat& image, double time_now, cv::Scalar color = {0, 255, 255});
 } // namespace utils
 
 #endif // __UTILS_HPP__
