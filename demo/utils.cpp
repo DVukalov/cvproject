@@ -108,8 +108,10 @@ void put_time_text(cv::Mat& image, double time_now, cv::Scalar color /*= (255, 2
     static const cv::Point rectPoint2 = {maxTextSize.width + 2, maxTextSize.height * 4 + 1};
 
     std::stringstream ss;
-    ss.precision(5);
-    ss << "TIME: " << time_now;
+    // ss.precision(5);
+    int min = time_now / 60;
+    int sec = int(time_now) % 60;
+    ss << "TIME: " << ((min > 9) ? "" : "0") << min << ":" << ((sec > 9) ? "" : "0") << sec;
 
     cv::Rect fpsRect = cv::Rect(rectPoint1, rectPoint2);
     cv::rectangle(image, fpsRect, cv::Scalar(0, 0, 0), -1);
