@@ -7,13 +7,14 @@
 #include <chrono>
 #include <cvlib.hpp>
 #include <opencv2/opencv.hpp>
+#include <iostream>
 
 #include "utils.hpp"
 
 int demo_object_counter(int argc, char* argv[])
 {
     // cv::VideoCapture cap("TestVideo.mp4");
-    cv::VideoCapture cap("D:/Документы/11\ semester/u131045/ComputerVision/lab1/cvclasses18/Video/TestVideo.mp4");
+    cv::VideoCapture cap("TestVideo.mp4");
 
     if (!cap.isOpened())
         return -1;
@@ -25,27 +26,40 @@ int demo_object_counter(int argc, char* argv[])
     cv::namedWindow(main_wnd);
     cv::namedWindow(demo_wnd);
 
+	int numCars = 0;
     cv::Mat frame;
     cv::Mat frame_amcn;
     utils::fps_counter fps;
-    const int area_width = 100; // width of inspecting area (pix)
+    const int area_width = 320; // width of inspecting area (pix)
 
-    auto time_start = std::chrono::system_clock::now();
+    std::ofstream out("result.txt");
+    if (!out.is_open()) return -1;
+
+    // auto time_start = std::chrono::system_clock::now();
     while (cv::waitKey(30) != 27) // ESC
     {
         cap >> frame;
+		if (frame.empty()) break;
+
         cv::resize(frame, frame, cv::Size(640, 480));
         cv::imshow(main_wnd, frame);
 
         // Область подсчета
-        std::vector<cv::Rect> movedAreas;
+        std::vector<cv::Rect> movedAreas, checkedAreas;
         amcn->setCountingArea(cv::Rect(frame.cols / 2 - area_width, frame.rows / 3, 2 * area_width, frame.rows / 3));
-        amcn->apply(frame, frame_amcn, movedAreas);
+        amcn->apply(frame, frame_amcn, movedAreas, checkedAreas);
         if (!frame_amcn.empty())
         {
             if (!movedAreas.empty())
             {
                 for (auto& it : movedAreas)
+                {
+                    const cv::Point point0 = {it.x + frame.cols / 2 - area_width, it.y + frame.rows / 3};
+                    const cv::Point point1 = {point0.x + it.width, point0.y + it.height};
+                    cv::Rect roiIt = cv::Rect(point0, point1);
+                    cv::rectangle(frame_amcn, roiIt, cv::Scalar(0, 0, 255), 2);
+                }
+                for (auto& it : checkedAreas)
                 {
                     const cv::Point point0 = {it.x + frame.cols / 2 - area_width, it.y + frame.rows / 3};
                     const cv::Point point1 = {point0.x + it.width, point0.y + it.height};
@@ -57,14 +71,21 @@ int demo_object_counter(int argc, char* argv[])
             cv::line(frame_amcn, cv::Point(frame_amcn.cols / 2, frame.rows / 3), cv::Point(frame_amcn.cols / 2, 2 * frame_amcn.rows / 3),
                      cv::Scalar(0, 0, 255), 2, 8);
             utils::put_fps_text(frame_amcn, fps);
-            utils::put_car_count_text(frame_amcn, 0);
+			while (numCars < amcn->getNumCars())
+			{
+				numCars++;
+				out << cap.get(cv::CAP_PROP_POS_MSEC) << "\n";
+			}
+            utils::put_car_count_text(frame_amcn, numCars);
 
-            auto time_now = std::chrono::system_clock::now();
-            std::chrono::duration<double> time_seconds = time_now - time_start;
-            utils::put_time_text(frame_amcn, time_seconds.count());
+            // auto time_now = std::chrono::system_clock::now();
+            // std::chrono::duration<double> time_seconds = time_now - time_start;
+            utils::put_time_text(frame_amcn, cap.get(cv::CAP_PROP_POS_MSEC)/1000);//time_seconds.count());
             cv::imshow(demo_wnd, frame_amcn);
         }
     }
+	
+	out.close();
 
     cv::destroyWindow(main_wnd);
     cv::destroyWindow(demo_wnd);

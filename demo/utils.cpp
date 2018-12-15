@@ -109,7 +109,7 @@ void put_time_text(cv::Mat& image, double time_now, cv::Scalar color /*= (255, 2
 
     std::stringstream ss;
     // ss.precision(5);
-    int min = time_now / 60;
+    int min = (int)time_now / 60;
     int sec = int(time_now) % 60;
     ss << "TIME: " << ((min > 9) ? "" : "0") << min << ":" << ((sec > 9) ? "" : "0") << sec;
 

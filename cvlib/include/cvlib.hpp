@@ -68,6 +68,8 @@ class corner_detector_fast : public cv::Feature2D
     }
 };
 
+struct TrackHistory;
+
 /// \brief Moving objects counter class
 class object_counter
 {
@@ -77,7 +79,7 @@ class object_counter
 
     void setCountingArea(const cv::Rect& area);
 
-    void apply(const cv::Mat& image, cv::Mat& result, std::vector<cv::Rect>& movedAreas);
+    void apply(const cv::Mat& image, cv::Mat& result, std::vector<cv::Rect>& movedAreas, std::vector<cv::Rect>& checkedAreas);
 
     void thresholdImage(cv::Mat& src);
     std::vector<int> regionQuery(std::vector<cv::Point>* points, cv::Point* point, float eps);
@@ -87,12 +89,17 @@ class object_counter
     void compareArrays(std::vector<cv::Rect>& firstArray, std::vector<cv::Rect>& secondArray, std::vector<cv::Rect>& resultArray);
     cv::Rect merge(const cv::Rect& rect1, const cv::Rect& rect2);
     void mergeIntersectingRectangles(std::vector<cv::Rect>& sourceArray, std::vector<cv::Rect>& resultArray);
+    void filterRectangles(const std::vector<cv::Rect> &sourceArray, std::vector<cv::Rect> &moved, std::vector<cv::Rect> &checked);
     void incrNumCars();
     size_t getNumCars();
+	
+	bool isRectsNear(const cv::Rect &rect1, const cv::Rect &rect2, int threshold);
+	void mergeNearestRectangles(std::vector<cv::Rect> &sourceArray, std::vector<cv::Rect> &resultArray, int threshold);
 
     private:
-    cv::Rect mCountingArea; // Near this area we will count objects
+    cv::Rect mCountingArea; // Inside this area we will count objects
     cv::Ptr<cv::BackgroundSubtractor> pSubstractor;
+    std::vector<TrackHistory> mTrackedRects;
 
     std::vector<cv::Rect> mBoundRect;
     std::vector<cv::Rect> mRectFirstArray;
