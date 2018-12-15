@@ -79,7 +79,7 @@ class object_counter
 
     void setCountingArea(const cv::Rect& area);
 
-    void apply(const cv::Mat& image, cv::Mat& result, std::vector<cv::Rect>& movedAreas, std::vector<cv::Rect>& checkedAreas);
+    void apply(const cv::Mat& image, /*cv::Mat& result,*/ std::vector<cv::Rect>& movedAreas, std::vector<cv::Rect>& checkedAreas);
 
     void thresholdImage(cv::Mat& src);
     std::vector<int> regionQuery(std::vector<cv::Point>* points, cv::Point* point, float eps);

@@ -36,6 +36,7 @@ int demo_object_counter(int argc, char* argv[])
     if (!out.is_open()) return -1;
 
     // auto time_start = std::chrono::system_clock::now();
+    cv::Mat tempAreaInFrame;
     while (cv::waitKey(30) != 27) // ESC
     {
         cap >> frame;
@@ -46,9 +47,13 @@ int demo_object_counter(int argc, char* argv[])
 
         // Область подсчета
         std::vector<cv::Rect> movedAreas, checkedAreas;
-        amcn->setCountingArea(cv::Rect(frame.cols / 2 - area_width, frame.rows / 3, 2 * area_width, frame.rows / 3));
-        amcn->apply(frame, frame_amcn, movedAreas, checkedAreas);
-        if (!frame_amcn.empty())
+        const cv::Rect tempArea = cv::Rect(frame.cols / 2 - area_width, frame.rows / 3, 2 * area_width, frame.rows / 3);
+        //amcn->setCountingArea(cv::Rect(frame.cols / 2 - area_width, frame.rows / 3, 2 * area_width, frame.rows / 3));
+        amcn->setCountingArea(tempArea);
+
+        tempAreaInFrame = frame(tempArea);
+        amcn->apply(tempAreaInFrame, /*frame_amcn,*/ movedAreas, checkedAreas);
+        if (!tempAreaInFrame.empty())
         {
             if (!movedAreas.empty())
             {
@@ -72,7 +77,7 @@ int demo_object_counter(int argc, char* argv[])
 
             //cv::line(frame_amcn, cv::Point(frame_amcn.cols / 2, frame.rows / 3), cv::Point(frame_amcn.cols / 2, 2 * frame_amcn.rows / 3),
             //         cv::Scalar(0, 0, 255), 2, 8);
-            cv::line(frame, cv::Point(frame_amcn.cols / 2, frame.rows / 3), cv::Point(frame_amcn.cols / 2, 2 * frame_amcn.rows / 3),
+            cv::line(frame, cv::Point(tempAreaInFrame.cols / 2, frame.rows / 3), cv::Point(tempAreaInFrame.cols / 2, 2 * frame.rows / 3),
                 cv::Scalar(0, 0, 255), 2, 8);
 
             //utils::put_fps_text(frame_amcn, fps);

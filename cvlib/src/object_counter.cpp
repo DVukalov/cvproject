@@ -121,18 +121,18 @@ void object_counter::setCountingArea(const cv::Rect& area)
         mCountingArea = area;
 }
 
-void object_counter::apply(const cv::Mat& image, cv::Mat& result, std::vector<cv::Rect>& movedAreas, std::vector<cv::Rect>& checkedAreas)
+void object_counter::apply(const cv::Mat& image, /*cv::Mat& result,*/ std::vector<cv::Rect>& movedAreas, std::vector<cv::Rect>& checkedAreas)
 {
     if (image.empty())
         return;
 
-    result.release();
+    cv::Mat roi;
     if (image.channels() > 1)
-        cv::cvtColor(image, result, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(image, roi, cv::COLOR_BGR2GRAY);   
     else
-        result = image.clone();
-
-    cv::Mat roi = result(mCountingArea);
+        roi = image.clone();
+   
+    // cv::Mat roi = result(mCountingArea);
     pSubstractor->apply(roi, roi);
 	cv::threshold(roi, roi, 200, 255, CV_THRESH_BINARY); // delete shadows
 
@@ -172,7 +172,7 @@ void object_counter::apply(const cv::Mat& image, cv::Mat& result, std::vector<cv
         mBoundRect.clear();
     }
 
-    cv::cvtColor(result, result, cv::COLOR_GRAY2BGR);
+    //cv::cvtColor(result, result, cv::COLOR_GRAY2BGR);
 }
 
 void object_counter::thresholdImage(cv::Mat& src)
